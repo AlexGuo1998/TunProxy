@@ -730,7 +730,9 @@ jboolean handle_tcp(const struct arguments *args,
                 }
             }
             if (cur->tcp.connect_sent == TCP_CONNECT_NOT_SENT) {
-                if (len > 0) {
+                if (len > 0 && datalen > 0) {
+                    // Only send CONNECT when we get Client Hello (i.e. got server name from SNI)
+                    // Fiddler will use this name to generate certificates, so sending IP would not work
                     char buffer[512];
                     sprintf(buffer, "CONNECT %s:443 HTTP/1.0\r\n\r\n", cur->tcp.hostname);
 
